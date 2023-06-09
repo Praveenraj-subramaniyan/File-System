@@ -46,4 +46,30 @@ router.get("/view", function (req, res) {
     }
   });
 });
+
+router.get("/delete", function (req, res) {
+  fs.readdir(folderPath, (err, files) => {
+    if (err) {
+      console.error(err);
+      res.status(500).send("Error retrieving files");
+    } else {
+      files.forEach((file) => {
+        if (file.endsWith(".txt")) {
+          const filePath = path.join(folderPath, file);
+          fs.unlink(filePath, (err) => {
+            if (err) {
+              console.error(err);
+            } else {
+              console.log(`File ${file} deleted successfully`);
+            }
+          });
+        }
+      });
+
+      res.send("Files deleted successfully");
+    }
+  });
+
+});
+
 module.exports = router;
